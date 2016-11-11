@@ -1,0 +1,24 @@
+          ky
+          kw
+          kf
+          kg
+          lq
+          lf
+          lp
+          ln
+          kk RSHIFT 1 -> ld
+          la LSHIFT 15 -> le
+        kw AND ky -> kz
+        kg OR kf -> kh
+        lf AND lq -> ls
+        ln AND lp -> lq
+        ld OR le -> lf
+      1 AND kz -> la
+      kh LSHIFT 1 -> lb
+      NOT ls -> lt
+      lf OR lq -> lr
+    lb OR la -> lc
+    lr AND lt -> lu
+  lc LSHIFT 1 -> lw
+  1 AND lu -> lv
+lw OR lv -> lx -> a
