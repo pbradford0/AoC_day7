@@ -32,27 +32,27 @@ def bobby_logic(filename):
       #needs to accomodate wire names as inputs only from here on in
       #but you need to skip any line if you don't have the values
       elif len(chop) == 5 and chop[1] == "AND":
-        if circuit.has_key([chop[-1]):
+        if not circuit.has_key([chop[0]) and not circuit.has_key([chop[2]):
           continue
         else:
           circuit[chop[-1]] = int(chop[0]) & int(chop[2])
       elif len(chop) == 5 and chop[1] == "OR":
-        if circuit.has_key([chop[-1]):
+        if not circuit.has_key([chop[0]) and not circuit.has_key([chop[2]):
           continue
         else:
           circuit[chop[-1]] = int(chop[0]) | int(chop[2])
       elif len(chop) == 5 and chop[1] == "LSHIFT":
-        if circuit.has_key([chop[-1]):
+        if not circuit.has_key([chop[0]):
           continue
         else:
         circuit[chop[-1]] = int(chop[0]) << int(chop[2])
       elif len(chop) == 5 and chop[1] == "RSHIFT":
-        if circuit.has_key([chop[-1]):
+        if circuit.has_key([chop[0]):
           continue
         else:
           circuit[chop[-1]] = int(chop[0]) >> int(chop[2])
       elif len(chop) == 4 and chop[0] == "NOT":
-        if circuit.has_key([chop[-1]):
+        if circuit.has_key([chop[1]):
           continue
         else:
           circuit[chop[-1]] = ~chop[1]
