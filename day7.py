@@ -26,52 +26,72 @@ def bobby_logic(filename):
       #skip every line we did before (that is in circuit{} already)
       if circuit.has_key(chop[-1]):
         continue
-      #fill out all the raw input...
-      elif chop[0].isdigit():
-        circuit[chop[-1]] = int(chop[0])
+      #each command has a fixed length
+      elif len(chop) == 3:
+        #fill out raw input, ex: "1 -> x"
+        if chop[0].isdigit():
+          circuit[chop[-1]] = int(chop[0])
+        #do "x -> y" if x is assigned
+        elif circuit.has_key(chop[0]):
+          circuit[chop[-1]] = circuit[chop[0]]
+        #skip line for "x -> y" when x is unassigned
+        else:
+          continue
+          #print line + ", where "+chop[-1]+" = "+str(circuit[chop[-1]])
       #...then dig into the logic-y parts
       #needs to accomodate wire names as inputs only from here on in
       #but you need to skip any line if you don't have the values
-      elif len(chop) == 5 and chop[1] == "AND":
-        if not circuit.has_key(chop[0]) or not circuit.has_key(chop[2]):
-          continue
-        else:
-          circuit[chop[-1]] = circuit[chop[0]] & circuit[chop[2]]
-          print line
-      elif len(chop) == 5 and chop[1] == "OR":
-        if not circuit.has_key(chop[0]) or not circuit.has_key(chop[2]):
-          continue
-        else:
-          circuit[chop[-1]] = circuit[chop[0]] | circuit[chop[2]]
-          print line
-      elif len(chop) == 5 and chop[1] == "LSHIFT":
-        if not circuit.has_key(chop[0]):
-          continue
-        else:
-          circuit[chop[-1]] = circuit[chop[0]] << int(chop[2])
-          print line
-      elif len(chop) == 5 and chop[1] == "RSHIFT":
-        if not circuit.has_key(chop[0]):
-          continue
-        else:
-          circuit[chop[-1]] = circuit[chop[0]] >> int(chop[2])
-          print line
       elif len(chop) == 4 and chop[0] == "NOT":
-        if not circuit.has_key(chop[1]):
-          continue
+        if circuit.has_key(chop[1]):
+          #the 0xFFFF de-signs the signed int. ex: "NOT x -> y" will be (-x - 1) unless ANDed with 0xFFFF
+          circuit[chop[-1]] = ~int(circuit[chop[1]]) & 0xFFFF
         else:
-          circuit[chop[-1]] = ~int(circuit[chop[1]])
-          print line + ", where " + chop[-1] + " = "+str(circuit[chop[-1]])
-      elif len(chop) == 3:
-        if not circuit.has_key(chop[0]):
           continue
-        else:
-          circuit[chop[-1]] = circuit[chop[0]]
-          print line + ", where "+chop[-1]+" = "+str(circuit[chop[-1]])
+          #print line + ", where " + chop[-1] + " = "+str(circuit[chop[-1]]) + " and ~" + chop[1] + " = "+str(~int(circuit[chop[1]]))
+      elif len(chop) == 5:
+        if chop[1] == "AND":
+          if circuit.has_key(chop[0]) and circuit.has_key(chop[2]):
+            circuit[chop[-1]] = (circuit[chop[0]] & circuit[chop[2]])
+          elif chop[0].isdigit() and circuit.has_key(chop[2]):
+            circuit[chop[-1]] = int(chop[0]) & circuit[chop[2]]
+          elif chop[2].isdigit() and circuit.has_key(chop[0]):
+            circuit[chop[-1]] = int(chop[2]) & circuit[chop[0]]
+          else:
+            continue
+            #print line
+        elif chop[1] == "OR":
+          if circuit.has_key(chop[0]) and circuit.has_key(chop[2]):
+            circuit[chop[-1]] = (circuit[chop[0]] | circuit[chop[2]])
+          elif chop[0].isdigit() and circuit.has_key(chop[2]):
+            circuit[chop[-1]] = int(chop[0]) | circuit[chop[2]]
+          elif chop[2].isdigit() and circuit.has_key(chop[0]):
+            circuit[chop[-1]] = int(chop[2]) | circuit[chop[0]]
+          else:
+            continue
+            #print line
+        elif chop[1] == "LSHIFT":
+          if circuit.has_key(chop[0]):
+            circuit[chop[-1]] = (circuit[chop[0]] << int(chop[2]))
+          else:
+            continue
+            #print line
+        elif chop[1] == "RSHIFT":
+          if circuit.has_key(chop[0]):
+            circuit[chop[-1]] = (circuit[chop[0]] >> int(chop[2]))
+          else:
+            continue
+            #print line
+          
+          #clean up a little
+          
+      
       else:
         print "Error: "+ line +" is an invalid input!"
         break
+        
   #a can only have one input - once it exists, yer done
+  for k, v in sorted(circuit.iteritems()):
+    print k, v,
   return circuit["a"]
 
 def main():
