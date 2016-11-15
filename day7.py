@@ -3,16 +3,6 @@
 
 import sys
 
-
-
-def l_shift(x, y, a):
-  a = x << y
-  return a
-
-def r_shift(x, y, a):
-  a = x >> y
-  return a
-
 def bobby_logic(filename):
   input = ""
   #create a dict to store each wire's value
